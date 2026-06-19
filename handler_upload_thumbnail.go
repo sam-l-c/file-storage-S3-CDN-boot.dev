@@ -1,6 +1,8 @@
 package main
 
 import (
+	"crypto/rand"
+	"encoding/base64"
 	"fmt"
 	"io"
 	"mime"
@@ -54,17 +56,10 @@ func (cfg *apiConfig) handlerUploadThumbnail(w http.ResponseWriter, r *http.Requ
 	extensions, err := mime.ExtensionsByType(mediaType)
 	ext := extensions[0]
 
-	filePath := filepath.Join(cfg.assetsRoot, videoIDString+ext)
-	// fmt.Printf("\n\vvideoIDString!!!!!!!!!!!!!!!!!!!!!: %s\n", videoIDString)
-	// fmt.Printf("\n\nfilepath!!!!!!!!!!!!!!!!!!!!!: %s\n", filePath)
-
-	/*
-		data, err := io.ReadAll(file)
-		if err != nil {
-			respondWithError(w, http.StatusBadRequest, "unable to parse thumbnail", err)
-			return
-		}
-	*/
+	randomID := make([]byte, 32)
+	rand.Read(randomID)
+	randomIDString := base64.URLEncoding.EncodeToString(randomID)
+	filePath := filepath.Join(cfg.assetsRoot, randomIDString+ext)
 	dst, err := os.Create(filePath)
 	if err != nil {
 		respondWithError(w, http.StatusInternalServerError, "unable to create file", err)

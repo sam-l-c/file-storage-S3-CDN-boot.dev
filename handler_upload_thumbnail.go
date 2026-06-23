@@ -36,7 +36,6 @@ func (cfg *apiConfig) handlerUploadThumbnail(w http.ResponseWriter, r *http.Requ
 
 	fmt.Println("uploading thumbnail for video", videoID, "by user", userID)
 
-	// TODO: implement the upload here
 	const maxMemory = 10 << 20
 	r.ParseMultipartForm(maxMemory)
 
@@ -81,8 +80,6 @@ func (cfg *apiConfig) handlerUploadThumbnail(w http.ResponseWriter, r *http.Requ
 	thumbnailURL := fmt.Sprintf("http://localhost:%s/%s", cfg.port, filePath)
 	video.ThumbnailURL = &thumbnailURL
 	cfg.db.UpdateVideo(video)
-
-	fmt.Printf("\n\ntumbnailURL:\n%s", thumbnailURL)
 
 	respondWithJSON(w, http.StatusOK, video)
 }
